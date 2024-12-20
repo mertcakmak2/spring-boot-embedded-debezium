@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: debezium-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: event
+    ports:
+      - "5433:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+
+#  postgres:
+#    image: quay.io/debezium/example-postgres:2.1
+#    container_name: debezium-postgres
+#    ports:
+#      - 5433:5432
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_DB=event
+
