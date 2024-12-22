@@ -15,6 +15,40 @@ services:
       - "-c"
       - "wal_level=logical"
 
+  zookeeper:
+    platform: linux/x86_64/v8
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:5.4.9
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    platform: linux/x86_64/v8
+    container_name: kafka
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  red-panda:
+    platform: linux/x86_64/v8
+    container_name: red-panda
+    image: docker.redpanda.com/redpandadata/console:latest
+    ports:
+      - 7070:8080
+    environment:
+      KAFKA_BROKERS: kafka:29092
+
 #  postgres:
 #    image: quay.io/debezium/example-postgres:2.1
 #    container_name: debezium-postgres

@@ -16,10 +16,16 @@ public class DebeziumConnectorConfig {
     public io.debezium.config.Configuration postgresConnector() {
 
         Map<String, String> configMap = new HashMap<>();
-        configMap.put("name", "pg-cdc-connector-10");
+        configMap.put("name", "pg-cdc-connector");
         configMap.put("connector.class", "io.debezium.connector.postgresql.PostgresConnector");
-        configMap.put("offset.storage",  "org.apache.kafka.connect.storage.FileOffsetBackingStore");
-        configMap.put("offset.storage.file.filename", createOffsetFile());
+        //configMap.put("offset.storage",  "org.apache.kafka.connect.storage.FileOffsetBackingStore");
+        //configMap.put("offset.storage.file.filename", createOffsetFile());
+        configMap.put("bootstrap.servers", "localhost:9092");
+        configMap.put("offset.storage", "org.apache.kafka.connect.storage.KafkaOffsetBackingStore");
+        configMap.put("offset.storage.topic", "posts_cdc");
+        configMap.put("offset.storage.partitions", "1");
+        configMap.put("offset.storage.replication.factor", "1");
+        configMap.put("offset.flush.timeout.ms", "5000");
         configMap.put("offset.flush.interval.ms", "60000");
         configMap.put("database.hostname", "localhost");
         configMap.put("database.port", "5433");

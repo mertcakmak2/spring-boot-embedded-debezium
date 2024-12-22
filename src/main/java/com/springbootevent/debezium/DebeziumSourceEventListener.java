@@ -24,6 +24,7 @@ public class DebeziumSourceEventListener {
         this.executor = Executors.newSingleThreadExecutor();
         this.debeziumEngine = DebeziumEngine.create(Json.class)
                 .using(postgresConnector.asProperties())
+                .using((success, message, error) -> {})
                 .notifying(this::handleEvent)
                 .build();
     }
